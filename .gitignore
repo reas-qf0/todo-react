@@ -1,0 +1,4 @@
+.env
+webApp/dist
+webApp/node_modules
+src/main/resources/static

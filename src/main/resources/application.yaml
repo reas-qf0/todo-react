@@ -1,0 +1,9 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.reas.SerializationKt.configureSerialization
+      - com.reas.SecurityKt.configureSecurity
+      - com.reas.ExposedKt.configureExposed
+      - com.reas.RoutingKt.configureRouting
