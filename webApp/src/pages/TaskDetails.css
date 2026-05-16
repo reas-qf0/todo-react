@@ -1,0 +1,34 @@
+.taskDetail {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+}
+
+.taskBody {
+    flex: 1;
+}
+
+.taskMeta {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.taskField {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fieldLabel {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-h);
+}
+
+.fieldValue {
+    margin: 0;
+    white-space: pre-wrap;
+}

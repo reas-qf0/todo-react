@@ -1,0 +1,47 @@
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-8px); }
+}
+
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    place-content: center;
+    place-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.confirm-overlay.fade-out {
+    animation: fadeOut 0.2s ease-out forwards;
+}
+
+.confirm-dialog {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 16px;
+    color: var(--text-h);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.confirm-dialog.fade-out {
+    animation: fadeOut 0.2s ease-out forwards;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}

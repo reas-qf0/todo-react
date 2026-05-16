@@ -11,16 +11,22 @@ import java.io.File
 
 fun Application.configureRouting() {
     routing {
-        authenticate("auth-oauth-google") {
+        authenticate("auth-oauth-google", optional = true) {
             get("login") {
-                call.respondRedirect("/callback")
+                val redirectUrl = call.request.queryParameters["redirect"] ?: "/dashboard"
+                call.response.cookies.append("redirect", redirectUrl, path="/loginCallback")
+                call.respondRedirect("/loginCallback")
             }
+        }
 
-            get("/callback") {
+        authenticate("auth-oauth-google", optional = false) {
+            get("/loginCallback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
                 val idToken = principal?.extraParameters?.get("id_token").toString()
                 call.sessions.set(UserSession(idToken))
-                call.respondRedirect("/dashboard")
+
+                val redirectUrl = call.request.cookies["redirect"] ?: "/dashboard"
+                call.respondRedirect(redirectUrl)
             }
         }
 
@@ -31,7 +37,7 @@ fun Application.configureRouting() {
         }
 
         staticResources("/", "static") {
-            fallback { path, call ->
+            fallback { _, call ->
                 call.respondFile(File("src/main/resources/static/index.html"))
             }
         }

@@ -16,7 +16,7 @@ import java.security.GeneralSecurityException
 
 suspend fun authorize(
     call: RoutingCall,
-    onError: suspend () -> Unit = { call.respond(HttpStatusCode.Unauthorized) },
+    onError: suspend () -> Unit = { call.respond(HttpStatusCode.Unauthorized, "Unauthorized") },
     onSuccess: suspend (String) -> Unit,
 ) {
     val session = call.sessions.get<UserSession>() ?: return onError()
@@ -27,14 +27,14 @@ suspend fun authorize(
         GsonFactory.getDefaultInstance()
     ).setIssuer("accounts.google.com").build()
 
-    try {
-        val idToken = verifier.verify(token) ?: return onError()
-        onSuccess(idToken.payload.subject)
+    val idToken = try {
+        verifier.verify(token) ?: return onError()
     } catch (_: GeneralSecurityException) {
-        onError()
+        return onError()
     } catch (_: IOException) {
-        onError()
+        return onError()
     }
+    onSuccess(idToken.payload.subject)
 }
 
 fun Application.configureSecurity() {
@@ -44,7 +44,7 @@ fun Application.configureSecurity() {
 
     authentication {
         oauth("auth-oauth-google") {
-            urlProvider = { "http://localhost:8080/callback" }
+            urlProvider = { "http://localhost:8080/loginCallback" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "google",

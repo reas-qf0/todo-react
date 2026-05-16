@@ -1,0 +1,48 @@
+.tasks {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.tasks th, .tasks td {
+    border: 1px solid var(--border);
+    padding: 8px;
+}
+
+.tasks tr:hover {
+    transition: background-color 0.3s;
+    background-color: var(--accent-bg);
+}
+
+.completedColumn {
+    width: 48px;
+}
+
+.dateColumn {
+    width: 150px;
+}
+
+.openColumn {
+    width: 75px;
+}
+
+.textLeft {
+    text-align: left;
+}
+
+.openCell {
+    text-align: center;
+    justify-content: center;
+}
+
+.descCell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    -webkit-line-break: normal;
+    word-break: break-all;
+    width: auto;
+}
