@@ -8,6 +8,8 @@ import io.ktor.client.engine.apache.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.request.host
+import io.ktor.server.request.port
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
 import io.ktor.server.sessions.*
@@ -44,7 +46,9 @@ fun Application.configureSecurity() {
 
     authentication {
         oauth("auth-oauth-google") {
-            urlProvider = { "http://localhost:8080/loginCallback" }
+            urlProvider = {
+                "https://${request.host()}:${request.port()}/loginCallback"
+            }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "google",

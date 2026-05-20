@@ -1,0 +1,6 @@
+build/
+src/main/resources/static
+terraform/
+.dockerignore
+Dockerfile
+h2.mv.db

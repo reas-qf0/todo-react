@@ -1,9 +1,17 @@
 ktor:
   deployment:
     port: 8080
+    sslPort: 8443
   application:
     modules:
       - com.reas.SerializationKt.configureSerialization
       - com.reas.SecurityKt.configureSecurity
       - com.reas.ExposedKt.configureExposed
       - com.reas.RoutingKt.configureRouting
+  security:
+    ssl:
+      keyStore: keystore.jks
+      keyAlias: sampleAlias
+      keyStorePassword: foobar
+      privateKeyPassword: foobar
+      enabledProtocols: [ "TLSv1.2", "TLSv1.3" ]

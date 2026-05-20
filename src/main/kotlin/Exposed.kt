@@ -77,6 +77,8 @@ suspend fun Application.configureExposed() {
                     description = updates.description ?: task.description,
                     completed = updates.completed ?: task.completed
                 )
+                if (newTask.title == "")
+                    return@authorize call.respond(HttpStatusCode.BadRequest, "title can't be empty")
                 userService.update(newTask)
                 call.respond(newTask)
             }
