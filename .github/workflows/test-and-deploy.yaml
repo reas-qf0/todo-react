@@ -18,12 +18,13 @@ jobs:
         id: checkout
         uses: actions/checkout@v6
 
-      - name: Retrieve JKS from secret
+      - name: Retrieve secrets & JKS
         id: jks
-        run:
+        run: |
+          echo ${{ secrets.ENV_FILE }} > .env
           echo ${{ secrets.JKS_BASE64 }} | base64 -d - > keystore.jks
 
-      - name: Build, tag, and push image to Yandex Cloud Container Registry
+      - name: Build, tag, and push image
         id: docker-build
         env:
           CR_REGISTRY: crpd55fmd7bksog5p7vd
@@ -35,7 +36,7 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
-      - name: Pull and run Docker image on a remote virtual machine
+      - name: Pull and run Docker image on a VM
         id: docker-deploy
         uses: appleboy/ssh-action@v1
         with:
@@ -44,6 +45,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             curl --header Metadata-Flavor:Google 169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | cut -f1 -d',' | cut -f2 -d':' | tr -d '"' | docker login --username iam --password-stdin cr.yandex
-            docker system prune -f
             docker pull cr.yandex/crpd55fmd7bksog5p7vd/todo-react:${{ github.sha }}
-            docker run -d -p 80:8080 -p 443:8443 cr.yandex/crpd55fmd7bksog5p7vd/todo-react:${{ github.sha }}
+            docker stop todo-react || echo Container wasn't running
+            docker system prune -a -f
+            docker run -d -p 80:8080 -p 443:8443 --name todo-react cr.yandex/crpd55fmd7bksog5p7vd/todo-react:${{ github.sha }}
