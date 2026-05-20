@@ -10,4 +10,4 @@ WORKDIR /app
 RUN ./gradlew --no-daemon compileJava
 
 EXPOSE 8080
-ENTRYPOINT ["./gradlew", "--no-daemon", "run"]
+ENTRYPOINT ["./gradlew", "--no-daemon", "run", "--info"]
