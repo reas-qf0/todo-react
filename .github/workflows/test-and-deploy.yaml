@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy image to Yandex Cloud
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        id: docker-build
+        env:
+          CR_REGISTRY: crpd55fmd7bksog5p7vd
+          CR_REPOSITORY: todo-react
+          IMAGE_TAG: ${{ github.sha }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
+      - name: Pull and run Docker image on a remote virtual machine
+        id: docker-deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 89.169.136.101
+          username: yoo
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            docker pull cr.yandex/crpd55fmd7bksog5p7vd/todo-react:${{ github.sha }}
+            docker run cr.yandex/crpd55fmd7bksog5p7vd/todo-react:${{ github.sha }} -d
