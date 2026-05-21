@@ -7,7 +7,7 @@ ADD . /app
 WORKDIR /app/webApp
 RUN npm install && npx vite build
 WORKDIR /app
-RUN ./gradlew --no-daemon compileJava
+RUN ./gradlew --no-daemon compileTestJava
 
 EXPOSE 8080
-ENTRYPOINT ["./gradlew", "--no-daemon", "run"]
+ENTRYPOINT ["./gradlew", "--no-daemon", "test", "--tests", "com.reas.ServerTest"]

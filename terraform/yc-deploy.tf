@@ -16,7 +16,7 @@ locals {
 
 terraform {
   required_providers {
-    yandex    = {
+    yandex = {
       source  = "yandex-cloud/yandex"
       version = ">= 0.47.0"
     }
@@ -24,14 +24,15 @@ terraform {
 }
 
 provider "yandex" {
-  zone = local.zone
+  service_account_key_file = "sa-key.json"
+  zone                     = local.zone
 }
 
 # Создание репозитория Сontainer Registry
 
 resource "yandex_container_registry" "my-registry" {
-  name       = local.registry_name
-  folder_id  = local.target_folder_id
+  name      = local.registry_name
+  folder_id = local.target_folder_id
 }
 
 # Создание сервисного аккаунта
@@ -70,7 +71,7 @@ resource "yandex_compute_disk" "boot-disk" {
   name     = "bootvmdisk"
   type     = "network-hdd"
   zone     = local.zone
-  size     = "10"
+  size     = "20"
   image_id = local.image_id
 }
 
@@ -80,7 +81,7 @@ resource "yandex_compute_instance" "docker-vm" {
   name               = local.vm_name
   platform_id        = "standard-v3"
   zone               = local.zone
-  service_account_id = "${yandex_iam_service_account.registry-sa.id}"
+  service_account_id = yandex_iam_service_account.registry-sa.id
 
   resources {
     cores  = 2
@@ -92,7 +93,7 @@ resource "yandex_compute_instance" "docker-vm" {
   }
 
   network_interface {
-    subnet_id = "${yandex_vpc_subnet.docker-vm-network-subnet-a.id}"
+    subnet_id = yandex_vpc_subnet.docker-vm-network-subnet-a.id
     nat       = true
   }
 

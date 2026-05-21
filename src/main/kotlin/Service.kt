@@ -50,8 +50,10 @@ class ExposedService(val database: R2dbcDatabase) {
         val isCompleted = bool("is_completed")
     }
 
-    suspend fun createSchema() {
+    suspend fun createSchema(dropTables: Boolean = false) {
         suspendTransaction(database) {
+            if (dropTables)
+                SchemaUtils.drop(Tasks)
             SchemaUtils.create(Tasks)
         }
     }

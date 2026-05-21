@@ -25,6 +25,7 @@ dependencies {
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.sessions)
     implementation(ktorLibs.server.netty)
+    implementation(ktorLibs.server.di)
     implementation(libs.exposed.core)
     implementation(libs.exposed.r2dbc)
     implementation(libs.h2database.h2)
@@ -34,6 +35,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
+    testImplementation(ktorLibs.client.contentNegotiation)
 }
 
 envLoader {

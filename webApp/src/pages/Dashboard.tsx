@@ -50,7 +50,7 @@ function Dashboard() {
                     {tasks !== null && (
                         tasks.length == 0 ? (
                             <tr>
-                                <td colSpan={4} className="textCenter">
+                                <td colSpan={5} className="textCenter">
                                     No tasks yet. Try adding one!
                                 </td>
                             </tr>

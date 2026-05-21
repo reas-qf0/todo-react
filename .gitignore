@@ -3,3 +3,4 @@ webApp/dist
 webApp/node_modules
 src/main/resources/static
 keystore.jks
+terraform/sa-key.json

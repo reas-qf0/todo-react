@@ -6,7 +6,7 @@ ktor:
     modules:
       - com.reas.SerializationKt.configureSerialization
       - com.reas.SecurityKt.configureSecurity
-      - com.reas.ExposedKt.configureExposed
+      - com.reas.DatabaseKt.configureDatabase
       - com.reas.RoutingKt.configureRouting
   security:
     ssl:

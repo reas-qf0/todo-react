@@ -1,0 +1,7 @@
+ktor:
+  application:
+    modules:
+      - com.reas.SerializationKt.configureSerialization
+      - com.reas.TestAuthorizationKt.configureSecurityTest
+      - com.reas.TestDatabaseKt.configureDatabaseTest
+      - com.reas.RoutingKt.configureRouting
