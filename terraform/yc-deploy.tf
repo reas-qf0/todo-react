@@ -1,15 +1,16 @@
 # Объявление переменных для конфиденциальных параметров
 
 locals {
-  zone             = "ru-central1-a"
-  ssh_key_path     = "/home/yoo/.ssh/ssh-key-1779088009475.pub"
-  target_folder_id = "b1gni3u9dk10jvj2gbpo"
-  registry_name    = "todo-react"
-  sa_name          = "yoo"
-  network_name     = "network"
-  subnet_name      = "subnet"
-  vm_name          = "todo-react"
-  image_id         = "fd8jqd7hb16epiac8lla"
+  zone              = "ru-central1-a"
+  target_folder_id  = "b1gni3u9dk10jvj2gbpo"
+  registry_name     = "todo-react"
+  sa_name           = "yoo"
+  network_name      = "network"
+  subnet_name       = "subnet"
+  vm_name           = "todo-react"
+  image_id          = "fd8jqd7hb16epiac8lla"
+  postgres_user     = "user"
+  postgres_password = file("postgres-password.txt")
 }
 
 # Настройка провайдера
@@ -99,5 +100,49 @@ resource "yandex_compute_instance" "docker-vm" {
 
   metadata = {
     user-data = "${file("user-data.yaml")}"
+  }
+}
+
+# Cоздание БД PostgreSQL
+
+resource "yandex_mdb_postgresql_database" "my_db" {
+  cluster_id = yandex_mdb_postgresql_cluster.my_cluster.id
+  name       = "testdb"
+  owner      = yandex_mdb_postgresql_user.my_user.name
+  lc_collate = "en_US.UTF-8"
+  lc_type    = "en_US.UTF-8"
+  extension {
+    name = "uuid-ossp"
+  }
+  extension {
+    name = "xml2"
+  }
+}
+
+resource "yandex_mdb_postgresql_user" "my_user" {
+  cluster_id = yandex_mdb_postgresql_cluster.my_cluster.id
+  name       = local.postgres_user
+  password   = local.postgres_password
+}
+
+resource "yandex_mdb_postgresql_cluster" "my_cluster" {
+  name        = "test"
+  environment = "PRESTABLE"
+  network_id  = yandex_vpc_network.docker-vm-network.id
+  folder_id   = local.target_folder_id
+
+  config {
+    version = 18
+    resources {
+      resource_preset_id = "s2.micro"
+      disk_type_id       = "network-ssd"
+      disk_size          = 16
+    }
+  }
+
+  host {
+    zone             = "ru-central1-a"
+    subnet_id        = yandex_vpc_subnet.docker-vm-network-subnet-a.id
+    assign_public_ip = true
   }
 }

@@ -5,12 +5,15 @@ kotlin = "2.3.21"
 logback = "1.5.25"
 dotenv = "0.0.1"
 google-api-client = "1.33.0"
+h2-r2dbc = "1.1.0.RELEASE"
+postgresql-r2dbc = "1.1.1.RELEASE"
 
 [libraries]
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-r2dbc = { module = "org.jetbrains.exposed:exposed-r2dbc", version.ref = "exposed" }
 h2database-h2 = { module = "com.h2database:h2", version.ref = "h2" }
-h2database-r2dbc = { module = "io.r2dbc:r2dbc-h2", version = "1.1.0.RELEASE" }
+h2database-r2dbc = { module = "io.r2dbc:r2dbc-h2", version.ref = "h2-r2dbc" }
+postgresql-r2dbc = { module = "org.postgresql:r2dbc-postgresql", version.ref = "postgresql-r2dbc" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 google-api-client = { module = "com.google.api-client:google-api-client", version.ref = "google-api-client" }
 

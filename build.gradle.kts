@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.exposed.r2dbc)
     implementation(libs.h2database.h2)
     implementation(libs.h2database.r2dbc)
+    implementation(libs.postgresql.r2dbc)
     implementation(libs.logback.classic)
     implementation(libs.google.api.client)
 
