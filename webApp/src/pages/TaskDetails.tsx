@@ -75,7 +75,7 @@ function TaskDetails() {
                         <div className="taskField">
                             <span className="fieldLabel attachmentHeader">
                                 Attachments
-                                <div style={{cursor: "pointer", placeContent: "center", placeItems: "center", display: "flex"}} onClick={() => {
+                                <div className="pointer addAttachment" onClick={() => {
                                     const input = document.createElement("input");
                                     input.type = "file";
                                     input.onchange = () => {
@@ -106,7 +106,7 @@ function TaskDetails() {
                                 attachments.length > 0 ? (
                                     attachments.map((attachment: Attachment) => (
                                         <div className="attachmentColumn">
-                                            <div className="deleteIcon" style={{cursor: "pointer"}} onClick={() => {
+                                            <div className="deleteIcon pointer" onClick={() => {
                                                 fetch(`/attachments/${attachment.id}`, {method: "DELETE"})
                                                     .then(r => {
                                                         if (r.status == 401)
@@ -121,7 +121,7 @@ function TaskDetails() {
                                                         setError("Failed to delete attachment")
                                                     })
                                             }}><DeleteIcon/></div>
-                                            <span className="attachmentFilename" style={{cursor: "pointer"}} onClick={() => {
+                                            <span className="attachmentFilename pointer" onClick={() => {
                                                 window.location.href = `/attachments/${attachment.id}`
                                             }}>{attachment.filename}</span>
                                         </div>
