@@ -1,6 +1,6 @@
 import {useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import type {Task} from "../Task.tsx";
+import type {Task} from "../Objects.tsx";
 import ErrorPopup from "../components/ErrorPopup.tsx";
 import ConfirmPopup from "../components/ConfirmPopup.tsx";
 import '../App.css';

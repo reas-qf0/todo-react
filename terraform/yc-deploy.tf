@@ -146,3 +146,23 @@ resource "yandex_mdb_postgresql_cluster" "my_cluster" {
     assign_public_ip = true
   }
 }
+
+# Создание бакета для Object Storage
+
+resource "yandex_storage_bucket" "uploads_bucket" {
+  folder_id = local.target_folder_id
+  bucket    = "uploads-bucket"
+}
+
+# Создание сервисного аккаунта для Object Storage
+
+resource "yandex_iam_service_account" "uploader-sa" {
+  name      = "uploader"
+  folder_id = local.target_folder_id
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "uploader-sa-role-storage-editor" {
+  folder_id = local.target_folder_id
+  role      = "storage.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.uploader-sa.id}"
+}

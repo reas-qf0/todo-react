@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import type {Task} from "../Task.tsx";
+import type {Task} from "../Objects.tsx";
 import ErrorPopup from "../components/ErrorPopup.tsx";
 import PlusIcon from "../components/PlusIcon.tsx";
 import '../App.css';

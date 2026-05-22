@@ -5,3 +5,10 @@ export interface Task {
     added: string,
     completed: boolean,
 }
+
+export interface Attachment {
+    filename: string,
+    id: string,
+    contentType: string,
+    taskId: string
+}

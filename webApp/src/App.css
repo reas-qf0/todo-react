@@ -7,6 +7,7 @@
     border: 2px solid transparent;
     transition: border-color 0.3s;
     height: 48px;
+    cursor: pointer;
 
     &:hover {
         border-color: var(--accent-border);
@@ -85,4 +86,8 @@
 textarea.input {
     resize: vertical;
     min-height: 400px;
+}
+
+.textLeft {
+    text-align: left;
 }

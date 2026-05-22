@@ -40,6 +40,14 @@ data class TaskUpdateRequest(
     val completed: Boolean? = null
 )
 
+@Serializable
+data class Attachment(
+    val id: String,
+    val taskId: String,
+    val filename: String,
+    val contentType: String,
+)
+
 @OptIn(ExperimentalUuidApi::class)
 class ExposedService(val database: R2dbcDatabase) {
     object Tasks : UuidTable() {
@@ -50,11 +58,20 @@ class ExposedService(val database: R2dbcDatabase) {
         val isCompleted = bool("is_completed")
     }
 
+    object Attachments : UuidTable() {
+        val filename = text("filename")
+        val contentType = text("content_type")
+        val taskId = uuid("task_id").index()
+    }
+
     suspend fun createSchema(dropTables: Boolean = false) {
         suspendTransaction(database) {
-            if (dropTables)
+            if (dropTables) {
                 SchemaUtils.drop(Tasks)
+                SchemaUtils.drop(Attachments)
+            }
             SchemaUtils.create(Tasks)
+            SchemaUtils.create(Attachments)
         }
     }
 
@@ -80,14 +97,7 @@ class ExposedService(val database: R2dbcDatabase) {
     suspend fun userTasks(userId: String): List<Task> = suspendTransaction(database) {
         Tasks.selectAll().where(Tasks.userId eq userId)
             .orderBy(Tasks.isCompleted to SortOrder.ASC, Tasks.addedTime to SortOrder.DESC)
-            .map { row -> Task(
-                id = row[Tasks.id].toString(),
-                userId = row[Tasks.userId],
-                title = row[Tasks.title],
-                description = row[Tasks.description],
-                added = Instant.fromEpochMilliseconds(row[Tasks.addedTime]).format(formatter),
-                completed = row[Tasks.isCompleted]
-            ) }
+            .map { it.toTask() }
             .toList()
     }
 
@@ -103,6 +113,52 @@ class ExposedService(val database: R2dbcDatabase) {
     suspend fun deleteTask(id: String) = suspendTransaction(database) {
         Tasks.deleteWhere { Tasks.id eq Uuid.parse(id) }
     }
+
+    suspend fun addAttachment(taskId: String, filename: String, contentType: String) = suspendTransaction(database) {
+        val uuid = try {
+            Uuid.parse(taskId)
+        } catch (_: IllegalArgumentException) {
+            return@suspendTransaction null
+        }
+        val newRecord = Attachments.insert {
+            it[Attachments.taskId] = uuid
+            it[Attachments.filename] = filename
+            it[Attachments.contentType] = contentType
+        }
+        newRecord[Attachments.id].value.toString()
+    }
+
+    suspend fun getAttachment(attachId: String) = suspendTransaction(database) {
+        val uuid = try {
+            Uuid.parse(attachId)
+        } catch (_: IllegalArgumentException) {
+            return@suspendTransaction null
+        }
+        Attachments.selectAll().where(Attachments.id eq uuid).firstOrNull()?.toAttachment()
+    }
+
+    suspend fun getAttachments(taskId: String): List<Attachment>? = suspendTransaction(database) {
+        val uuid = try {
+            Uuid.parse(taskId)
+        } catch (_: IllegalArgumentException) {
+            return@suspendTransaction null
+        }
+        Attachments.selectAll()
+            .where(Attachments.taskId eq uuid)
+            .map { it.toAttachment() }
+            .toList()
+    }
+
+    suspend fun deleteAttachment(id: String) = suspendTransaction(database) {
+        Attachments.deleteWhere { Attachments.id eq Uuid.parse(id) }
+    }
+
+    private fun ResultRow.toAttachment(): Attachment = Attachment(
+        filename = this[Attachments.filename],
+        id = this[Attachments.id].value.toString(),
+        taskId = this[Attachments.taskId].toString(),
+        contentType = this[Attachments.contentType],
+    )
 
     private fun ResultRow.toTask() = Task(
         id = this[Tasks.id].toString(),

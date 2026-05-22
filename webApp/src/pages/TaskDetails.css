@@ -7,9 +7,11 @@
 
 .taskBody {
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.taskMeta {
+.taskColumn {
     width: 200px;
     display: flex;
     flex-direction: column;
@@ -31,4 +33,39 @@
 .fieldValue {
     margin: 0;
     white-space: pre-wrap;
+}
+
+.descriptionField {
+    min-height: 128px;
+}
+
+.deleteIcon {
+    color: #c0392b;
+    display: flex;
+    place-content: center;
+    place-items: center;
+    justify-self: center;
+    width: 50px;
+}
+
+.taskStatus {
+    gap: 8px;
+}
+
+.attachmentColumn {
+    display: flex;
+    flex-direction: row;
+}
+
+.attachmentFilename {
+    text-align: left;
+    flex: 1;
+}
+
+.attachmentHeader {
+    display: flex;
+    place-content: center;
+    place-items: center;
+    justify-self: center;
+    gap: 16px;
 }
