@@ -37,9 +37,13 @@ jobs:
         with:
           version: 'v1.35.4'
 
+      - name: Set up Yandex Cloud CLI
+        uses: okar1/yc-cli-install@master
+        with:
+          SA_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
       - name: Configure kubectl
         run: |
-          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           yc managed-kubernetes cluster get-credentials k8s-cluster --external
 
       - name: Deploy to cluster
