@@ -45,3 +45,10 @@ envLoader {
     taskNames("run")
     overrideSystemEnvironment.set(false)
 }
+
+sonar {
+    properties {
+        property("sonar.projectKey", "todo-react")
+        property("sonar.projectName", "todo-react")
+    }
+}

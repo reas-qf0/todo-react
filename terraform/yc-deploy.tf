@@ -88,14 +88,15 @@ resource "yandex_compute_disk" "boot-disk" {
 # Создание ВМ
 
 resource "yandex_compute_instance" "docker-vm" {
-  name               = local.vm_name
-  platform_id        = "standard-v3"
-  zone               = local.zone
-  service_account_id = yandex_iam_service_account.registry-sa.id
+  name                      = local.vm_name
+  platform_id               = "standard-v3"
+  zone                      = local.zone
+  service_account_id        = yandex_iam_service_account.registry-sa.id
+  allow_stopping_for_update = true
 
   resources {
-    cores  = 2
-    memory = 2
+    cores  = 4
+    memory = 4
   }
 
   boot_disk {
