@@ -114,13 +114,14 @@ class ExposedService(val database: R2dbcDatabase) {
         Tasks.deleteWhere { Tasks.id eq Uuid.parse(id) }
     }
 
-    suspend fun addAttachment(taskId: String, filename: String, contentType: String) = suspendTransaction(database) {
+    suspend fun addAttachment(id: Uuid, taskId: String, filename: String, contentType: String) = suspendTransaction(database) {
         val uuid = try {
             Uuid.parse(taskId)
         } catch (_: IllegalArgumentException) {
             return@suspendTransaction null
         }
         val newRecord = Attachments.insert {
+            it[Attachments.id] = id
             it[Attachments.taskId] = uuid
             it[Attachments.filename] = filename
             it[Attachments.contentType] = contentType

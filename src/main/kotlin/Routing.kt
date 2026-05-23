@@ -28,6 +28,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 fun Application.configureRouting() {
@@ -169,11 +170,8 @@ fun Application.configureRouting() {
 
                     call.receiveMultipart().forEachPart { part ->
                         if (part is PartData.FileItem) {
-                            val name = userService.addAttachment(
-                                filename = part.originalFileName!!,
-                                contentType = part.contentType!!.toString(),
-                                taskId = task.id
-                            )
+                            val uuid = Uuid.random()
+                            val name = uuid.toString()
                             val tmpFile = File("/tmp/$name")
                             part.provider().copyAndClose(tmpFile.writeChannel())
 
@@ -186,8 +184,15 @@ fun Application.configureRouting() {
                                 println(response.status)
                                 println(response.bodyAsText())
                                 call.respond(HttpStatusCode.InternalServerError, "Yandex Cloud error")
+                            } else {
+                                userService.addAttachment(
+                                    id = uuid,
+                                    filename = part.originalFileName!!,
+                                    contentType = part.contentType!!.toString(),
+                                    taskId = task.id
+                                )
+                                tmpFile.delete()
                             }
-                            tmpFile.delete()
                         }
                         part.dispose()
                     }
