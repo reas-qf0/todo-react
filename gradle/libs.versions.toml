@@ -7,6 +7,7 @@ dotenv = "0.0.1"
 google-api-client = "1.33.0"
 h2-r2dbc = "1.1.0.RELEASE"
 postgresql-r2dbc = "1.1.1.RELEASE"
+sonarqube = "7.3.0.8198"
 
 [libraries]
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
@@ -22,3 +23,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dotenv = { id = "io.github.taisuke-fujimoto.env-loader", version.ref = "dotenv" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

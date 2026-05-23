@@ -3,6 +3,7 @@ plugins {
     alias(ktorLibs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.dotenv)
+    alias(libs.plugins.sonarqube)
 }
 
 group = "com.reas"

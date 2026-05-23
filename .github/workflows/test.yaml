@@ -18,6 +18,10 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
+      - name: Analyze project with SonarQube
+        id: sonarqube
+        run: ./gradlew sonar
+
       - name: Retrieve secrets & JKS
         id: jks
         run: |

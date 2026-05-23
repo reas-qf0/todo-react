@@ -31,3 +31,16 @@ jobs:
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
+      - name: Set up kubectl
+        id: kubectl
+        run: |
+          snap install kubectl --classic
+          yc managed-kubernetes cluster get-credentials k8s-cluster --external
+
+      - name: Deploy image on a cluster
+        id: deploy
+        run: |
+          cd terraform
+          sed -i 's/todo-react:/todo-react:${{ github.sha }}/g' service.yaml
+          kubectl apply -f service.yaml

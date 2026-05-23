@@ -30,14 +30,11 @@ spec:
 
       containers:
         - name: todo-react
-          image: cr.yandex/crpd55fmd7bksog5p7vd/todo-react:d9b030ce9ac5fd96d350b34a2769cd6412b1addf
+          image: cr.yandex/crpd55fmd7bksog5p7vd/todo-react:
           resources:
             requests:
-              memory: "256Mi"
+              memory: "512Mi"
               cpu: "500m"
-            limits:
-              memory: "2Gi"
-              cpu: "1"
 ---
 ### Service
 apiVersion: v1
