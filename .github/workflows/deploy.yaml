@@ -32,15 +32,17 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
-      - name: Set up kubectl
-        id: kubectl
-        run: |
-          snap install kubectl --classic
-          yc managed-kubernetes cluster get-credentials k8s-cluster --external
-
-      - name: Deploy image on a cluster
-        id: deploy
+      - name: Paste commit SHA into Kubernetes config
+        id: prepare-config
         run: |
           cd terraform
           sed -i 's/todo-react:/todo-react:${{ github.sha }}/g' service.yaml
-          kubectl apply -f service.yaml
+          cat service.yaml
+
+      - name: Deploy image on a cluster
+        id: deploy
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: apply -f service.yaml
