@@ -44,7 +44,7 @@ jobs:
 
       - name: Configure kubectl
         run: |
-          yc managed-kubernetes cluster get-credentials k8s-cluster --external
+          yc managed-kubernetes cluster get-credentials catem8jvf64c62jst8e4 --external
 
       - name: Deploy to cluster
         run: |
