@@ -4,42 +4,6 @@ on:
       - main
 
 jobs:
-#  apply-terraform:
-#    name: Apply Terraform plan
-#    runs-on: ubuntu-24.04
-#    steps:
-#      - name: Checkout repository
-#        id: checkout
-#        uses: actions/checkout@v6
-#
-#      - name: Download and setup Terraform
-#        id: terraform-download
-#        run: |
-#          cd terraform
-#          curl -L -o terraform.zip https://hashicorp-releases.yandexcloud.net/terraform/1.15.4/terraform_1.15.4_linux_amd64.zip
-#          unzip terraform.zip
-#          terraform version
-#
-#      - name: Retrieve Yandex Cloud credentials
-#        id: retrieve-credentials
-#        run: echo '${{ secrets.YC_SA_JSON_CREDENTIALS }} > sa-key.json
-#
-#      - name: Initialize Terraform
-#        id: terraform-init
-#        run: terraform init
-#
-#      - name: Validate Plan
-#        id: terraform-validate
-#        run: terraform validate
-#
-#      - name: Print Plan Changes
-#        id: terraform-plan
-#        run: terraform plan
-#
-#      - name: Apply Plan
-#        id: terraform-apply
-#        run: terraform apply
-
   test:
     name: Test
     runs-on: ubuntu-24.04
@@ -81,3 +45,4 @@ jobs:
             curl --header Metadata-Flavor:Google 169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | cut -f1 -d',' | cut -f2 -d':' | tr -d '"' | docker login --username iam --password-stdin cr.yandex
             docker container rm todo-react-test || echo No container to remove
             docker run --name todo-react-test cr.yandex/crpd55fmd7bksog5p7vd/todo-react-test:${{ github.sha }}
+            docker system prune -a -f
