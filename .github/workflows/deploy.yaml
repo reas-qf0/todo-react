@@ -39,6 +39,7 @@ jobs:
 
       - name: Configure kubectl
         run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
           yc managed-kubernetes cluster get-credentials k8s-cluster --external
 
       - name: Deploy to cluster
